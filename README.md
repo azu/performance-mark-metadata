@@ -1,8 +1,8 @@
 # performance-mark-metadata
 
-performance.mark with custom meta data.
+`performance.mark` with custom meta data.
 
-This library inspired by [User Timing API Level 3](https://docs.google.com/presentation/d/1d64Y4rtLCxobGgljVySU2CJpMPK5ksaiZuv3ka1dCVA/edit#slide=id.p "User Timing L3")
+This library inspired by [User Timing API Level 3](https://docs.google.com/presentation/d/1d64Y4rtLCxobGgljVySU2CJpMPK5ksaiZuv3ka1dCVA/edit#slide=id.p "User Timing L3").
 This proposal will add `details` as metadata to `performance.mark`.
 
 ## Supports
