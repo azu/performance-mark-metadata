@@ -61,6 +61,58 @@ performance.getEntriesByName(markerName).forEach(entry => {
 });
 ```
 
+### UseCase
+
+You want to record performance logging and related metadata.
+You can collection all these logging and metadata after finish all task. 
+
+```js
+const marker = new PerformanceMetadataMarker();
+marker.mark("start", {
+    details: {
+        id: 1
+    }
+});
+
+marker.mark("start task", {
+    details: {
+        id: 2
+    }
+});
+
+return Promise.resolve().then(() => {
+    marker.mark("finish task", {
+        details: {
+            id: 3
+        }
+    });
+}).then(() => {
+    // collect log and metadata.
+    const results = performance
+        .getEntries()
+        .map(entry => {
+            return marker.getEntryMetadata(entry);
+        });
+    assert.deepEqual(results, [
+        {
+            "details": {
+                "id": 1
+            }
+        },
+        {
+            "details": {
+                "id": 2
+            }
+        },
+        {
+            "details": {
+                "id": 3
+            }
+        }
+    ]);
+});
+```
+
 ## Changelog
 
 See [Releases page](https://github.com/azu/performance-mark-metadata/releases).

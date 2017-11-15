@@ -97,7 +97,54 @@ describe("performance-mark-metadata", () => {
             });
         });
     });
-    context("usecase", () => {
-        it("can various mark and collect report of the marked entry", () => {});
+    context("UseCase", () => {
+        it("can various mark and collect report of the marked entry", () => {
+            const marker = new PerformanceMetadataMarker();
+            marker.mark("start", {
+                details: {
+                    id: 1
+                }
+            });
+
+            marker.mark("start task", {
+                details: {
+                    id: 2
+                }
+            });
+
+            return Promise.resolve()
+                .then(() => {
+                    marker.mark("finish task", {
+                        details: {
+                            id: 3
+                        }
+                    });
+                })
+                .then(() => {
+                    const results = performance
+                        .getEntries()
+                        .map((entry: PerformanceEntry) => {
+                            return marker.getEntryMetadata(entry);
+                        })
+                        .filter((result: any) => result !== undefined);
+                    assert.deepEqual(results, [
+                        {
+                            details: {
+                                id: 1
+                            }
+                        },
+                        {
+                            details: {
+                                id: 2
+                            }
+                        },
+                        {
+                            details: {
+                                id: 3
+                            }
+                        }
+                    ]);
+                });
+        });
     });
 });
