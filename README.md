@@ -5,11 +5,11 @@ performance.mark with custom meta data.
 This library inspired by [User Timing API Level 3](https://docs.google.com/presentation/d/1d64Y4rtLCxobGgljVySU2CJpMPK5ksaiZuv3ka1dCVA/edit#slide=id.p "User Timing L3")
 This proposal will add `details` as metadata to `performance.mark`.
 
-## Dependencies
+## Supports
 
-- [Performance.mark()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark "Performance.mark()")
+- Modern browser and Node.js >= 8.5.0
+- They are supported [Performance.mark()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark "Performance.mark()") API.
 - [Performance Timing API | Node.js v9.2.0 Documentation](https://nodejs.org/api/perf_hooks.html "Performance Timing API | Node.js v9.2.0 Documentation")
-    - Modern browser or Node.js 8.5.0>=
 
 ## Install
 
