@@ -11,6 +11,10 @@ This proposal will add `details` as metadata to `performance.mark`.
 - They are supported [Performance.mark()](https://developer.mozilla.org/en-US/docs/Web/API/Performance/mark "Performance.mark()") API.
 - [Performance Timing API | Node.js v9.2.0 Documentation](https://nodejs.org/api/perf_hooks.html "Performance Timing API | Node.js v9.2.0 Documentation")
 
+Old browser need to `Performance.mark()` polyfill.
+
+- [nicjansma/usertiming.js: UserTiming polyfill](https://github.com/nicjansma/usertiming.js "nicjansma/usertiming.js: UserTiming polyfill")
+
 ## Install
 
 Install with [npm](https://www.npmjs.com/):
