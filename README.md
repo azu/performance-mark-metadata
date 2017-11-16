@@ -30,12 +30,29 @@ export interface PerformanceMetadataMarkerMetadata {
     startTime?: number;
     details: any;
 }
+export interface PerformanceMetadataMarkerArgs {
+    performance?: Performance;
+}
 export declare class PerformanceMetadataMarker {
     private metadataMap;
-    setResourceTimingBufferSize(maxSize: number): void;
+    private performance;
+    constructor(args?: PerformanceMetadataMarkerArgs);
+    /**
+     * Mark `name` with `metadata`
+     * You can get the `metadata` by using `getEntryMetadata`.
+     */
     mark(name: string, metadata?: PerformanceMetadataMarkerMetadata): void;
+    /**
+     * Return a metadata if match the `entry`
+     */
     getEntryMetadata(entry: PerformanceEntry): PerformanceMetadataMarkerMetadata | undefined;
+    /**
+     * Clear a metadata for `entry`
+     */
     clearEntryMetadata(entry: PerformanceEntry): boolean;
+    /**
+     * Clear all metadata
+     */
     clear(): void;
 }
 ```
@@ -62,6 +79,23 @@ performance.getEntriesByName(markerName).forEach(entry => {
     };
     */
     assert.strictEqual(result, metadata, "should get same metadata");
+});
+```
+
+### Usage in Node.js
+
+Node.js 8.5.0 introduce [`perf_hooks`](https://nodejs.org/api/perf_hooks.html) module.
+You pass `require("perf_hooks").performance` to `PerformanceMetadataMarker` constructor arguments.
+
+```js
+import { PerformanceMetadataMarker } from "performance-mark-metadata";
+const nodePerformanceHook = require("perf_hooks");
+const performance = nodePerformanceHook.performance;
+const marker = new PerformanceMetadataMarker({
+    performance
+});
+marker.mark("name", {
+    details: { key: "value" }
 });
 ```
 
