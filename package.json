@@ -11,7 +11,7 @@
     "src/"
   ],
   "name": "performance-mark-metadata",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "performance.mark with custom meta data.",
   "main": "lib/performance-mark-metadata.js",
   "scripts": {
