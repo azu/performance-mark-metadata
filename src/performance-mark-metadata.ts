@@ -1,26 +1,32 @@
 import { MapLike } from "map-like";
-import { getPerformanceObject } from "./performance-api";
-
-const performance = getPerformanceObject();
 
 export interface PerformanceMetadataMarkerMetadata {
     startTime?: number;
     details: any;
 }
 
+export interface PerformanceMetadataMarkerArgs {
+    performance?: Performance;
+}
+
 export class PerformanceMetadataMarker {
     private metadataMap = new MapLike<PerformanceEntry, any>();
+    private performance: Performance;
+
+    constructor(args: PerformanceMetadataMarkerArgs = {}) {
+        this.performance = args.performance || performance;
+    }
 
     /**
      * Mark `name` with `metadata`
      * You can get the `metadata` by using `getEntryMetadata`.
      */
     mark(name: string, metadata?: PerformanceMetadataMarkerMetadata): void {
-        performance.mark(name);
+        this.performance.mark(name);
         if (!metadata) {
             return;
         }
-        const entries = performance.getEntriesByName(name);
+        const entries = this.performance.getEntriesByName(name);
         const currentMark = entries[entries.length - 1];
         if (currentMark) {
             this.metadataMap.set(currentMark, metadata);
@@ -42,7 +48,7 @@ export class PerformanceMetadataMarker {
     }
 
     /**
-     * Clear all metdata
+     * Clear all metadata
      */
     clear(): void {
         return this.metadataMap.clear();

@@ -1,8 +1,8 @@
 import { PerformanceMetadataMarker } from "../src/performance-mark-metadata";
-import { getPerformanceObject } from "../src/performance-api";
 import * as assert from "assert";
 
-const performance = getPerformanceObject();
+const nodePerformanceHook = require("perf_hooks");
+const performance = nodePerformanceHook.performance;
 describe("performance-mark-metadata", () => {
     beforeEach(() => {
         performance.clearMarks();
@@ -10,7 +10,9 @@ describe("performance-mark-metadata", () => {
     });
     describe("mark and getEntryMetadata", () => {
         it("should mark with metadata", () => {
-            const marker = new PerformanceMetadataMarker();
+            const marker = new PerformanceMetadataMarker({
+                performance
+            });
             const metadata = {
                 details: { key: "value" }
             };
@@ -24,7 +26,9 @@ describe("performance-mark-metadata", () => {
         });
         context("when marked same name", () => {
             it("should return correct details", () => {
-                const marker = new PerformanceMetadataMarker();
+                const marker = new PerformanceMetadataMarker({
+                    performance
+                });
                 const metadata = {
                     details: { key: "value" }
                 };
@@ -45,7 +49,9 @@ describe("performance-mark-metadata", () => {
 
     describe("mark and clearEntryMetadata", () => {
         it("should clear by clearEntryMetadata", () => {
-            const marker = new PerformanceMetadataMarker();
+            const marker = new PerformanceMetadataMarker({
+                performance
+            });
             const metadata = {
                 details: { key: "value" }
             };
@@ -72,7 +78,9 @@ describe("performance-mark-metadata", () => {
         });
         context("clear all metadata", () => {
             it("should return correct details", () => {
-                const marker = new PerformanceMetadataMarker();
+                const marker = new PerformanceMetadataMarker({
+                    performance
+                });
                 const metadata = {
                     details: { key: "value" }
                 };
@@ -99,7 +107,9 @@ describe("performance-mark-metadata", () => {
     });
     context("UseCase", () => {
         it("can various mark and collect report of the marked entry", () => {
-            const marker = new PerformanceMetadataMarker();
+            const marker = new PerformanceMetadataMarker({
+                performance
+            });
             marker.mark("start", {
                 details: {
                     id: 1
