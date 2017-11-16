@@ -3,16 +3,6 @@ import { getPerformanceObject } from "./performance-api";
 
 const performance = getPerformanceObject();
 
-function set_resource_timing_buffer_size(maxSize: number) {
-    if (performance === undefined) {
-        return;
-    }
-    const supported = typeof performance.setResourceTimingBufferSize == "function";
-    if (supported) {
-        performance.setResourceTimingBufferSize(maxSize);
-    }
-}
-
 export interface PerformanceMetadataMarkerMetadata {
     startTime?: number;
     details: any;
@@ -21,10 +11,10 @@ export interface PerformanceMetadataMarkerMetadata {
 export class PerformanceMetadataMarker {
     private metadataMap = new MapLike<PerformanceEntry, any>();
 
-    setResourceTimingBufferSize(maxSize: number) {
-        set_resource_timing_buffer_size(maxSize);
-    }
-
+    /**
+     * Mark `name` with `metadata`
+     * You can get the `metadata` by using `getEntryMetadata`.
+     */
     mark(name: string, metadata?: PerformanceMetadataMarkerMetadata): void {
         performance.mark(name);
         if (!metadata) {
@@ -37,14 +27,23 @@ export class PerformanceMetadataMarker {
         }
     }
 
+    /**
+     * Return a metadata if match the `entry`
+     */
     getEntryMetadata(entry: PerformanceEntry): PerformanceMetadataMarkerMetadata | undefined {
         return this.metadataMap.get(entry);
     }
 
+    /**
+     * Clear a metadata for `entry`
+     */
     clearEntryMetadata(entry: PerformanceEntry) {
         return this.metadataMap.delete(entry);
     }
 
+    /**
+     * Clear all metdata
+     */
     clear(): void {
         return this.metadataMap.clear();
     }
