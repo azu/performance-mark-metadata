@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div id='chart_div' style='width: 900px; height: 500px;'></div>
+<script>
+    // https://developers.google.com/chart/interactive/docs/gallery/annotationchart
+    google.charts.load('current', {
+        'packages': ['annotationchart']
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        let prevFps = 0;
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Time');
+        data.addColumn('number', 'FPS');
+        data.addColumn('string', 'Event');
+        data.addColumn('string', 'meta');
+        data.addRows(
+            [
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844918809.685,
+                    "meta": {
+                        "details": {
+                            "FPS": 60
+                        }
+                    }
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844919811.215,
+                    "meta": {
+                        "details": {
+                            "FPS": 59
+                        }
+                    }
+                },
+                {
+                    "type": "Heavy Action",
+                    "timeStamp": 1510844919816.735
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844920812.53,
+                    "meta": {
+                        "details": {
+                            "FPS": 3
+                        }
+                    }
+                },
+                {
+                    "type": "Heavy Action",
+                    "timeStamp": 1510844921283.335
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844922049.77,
+                    "meta": {
+                        "details": {
+                            "FPS": 21
+                        }
+                    }
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844923063.61,
+                    "meta": {
+                        "details": {
+                            "FPS": 55
+                        }
+                    }
+                },
+                {
+                    "type": "Heavy Action",
+                    "timeStamp": 1510844923558.21
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844924339.64,
+                    "meta": {
+                        "details": {
+                            "FPS": 23
+                        }
+                    }
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844925349.945,
+                    "meta": {
+                        "details": {
+                            "FPS": 56
+                        }
+                    }
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844926355.56,
+                    "meta": {
+                        "details": {
+                            "FPS": 55
+                        }
+                    }
+                },
+                {
+                    "type": "FPS",
+                    "timeStamp": 1510844927357.55,
+                    "meta": {
+                        "details": {
+                            "FPS": 59
+                        }
+                    }
+                }
+            ].map((log) => {
+                const currentFPS = log.meta && log.meta.details && log.meta.details.FPS;
+                if (currentFPS !== undefined) {
+                    prevFps = log.meta.details.FPS;
+                }
+                // ignore FPS
+                const logType = log.type !== "FPS" ? log.type : undefined;
+                return [new Date(log.timeStamp), currentFPS !== undefined ? currentFPS : prevFps, logType];
+            })
+        );
+
+        var chart = new google.visualization.AnnotationChart(document.getElementById('chart_div'));
+
+        var options = {
+            displayAnnotations: true,
+            min: 0
+        };
+
+        chart.draw(data, options);
+    }
+
+</script>
+</body>
+</html>
