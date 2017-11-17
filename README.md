@@ -101,11 +101,11 @@ marker.mark("name", {
 
 ### UseCase
 
-[![Example](example/example.png)](./example)
+[![Example](docs/example.png)](./docs)
 
 ```
 git clone https://github.com/azu/performance-mark-metadata.git
-cd performance-mark-metadata/example
+cd performance-mark-metadata/docs
 npm install
 open index.html
 ```
@@ -171,7 +171,7 @@ You can get the log data and analyze the log data.
 For example, visualize the log data by using [C3.js](http://c3js.org/ "C3.js").
 You can found the relationship  between "FPS" and "Heavy Task".
 
-![example.gif](./example/example.gif)
+![example.gif](./docs/example.gif)
 
 ## Changelog
 
