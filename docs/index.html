@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>performance-mark-metadata Example</title>
+    <link href="./node_modules/c3/c3.min.css" rel="stylesheet">
+    <style>
+        .main {
+            display: block;
+        }
+
+        #js-button {
+            margin: 1em;
+            padding: 1em;
+            font-size: 24px;
+        }
+
+        #js-output {
+            display: block;
+            height: 30em;
+            width: 30em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main">
+    <canvas id="js-canvas" width="240" height="240">
+    </canvas>
+    <canvas id="js-canvas2" width="240" height="240">
+    </canvas>
+</div>
+<button id="js-button">Do heavy task</button>
+
+<textarea id="js-output"></textarea>
+
+<div id="js-chart"></div>
+<script src="./bundle.js"></script>
+</body>
+</html>
