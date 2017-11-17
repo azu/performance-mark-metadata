@@ -101,7 +101,9 @@ marker.mark("name", {
 
 ### UseCase
 
-[![Example](docs/example.png)](./docs)
+[![Example](docs/example.png)](https://azu.github.io/performance-mark-metadata)
+
+- See <https://azu.github.io/performance-mark-metadata>
 
 ```
 git clone https://github.com/azu/performance-mark-metadata.git
