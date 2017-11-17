@@ -101,55 +101,77 @@ marker.mark("name", {
 
 ### UseCase
 
-You want to record performance logging and related metadata.
-You can collection all these logging and metadata after finish all task. 
+[![Example](example/example.png)](./example)
+
+```
+git clone https://github.com/azu/performance-mark-metadata.git
+cd performance-mark-metadata/example
+npm install
+open index.html
+```
+ 
+You want to found performance problem on viewing the site.
+You can analyze the problem by using `performance-mark-metadata`.
+
+It is useful for [Real user monitoring](https://en.wikipedia.org/wiki/Real_user_monitoring "Real user monitoring")(RUM).
+In development, you can use browser's development tools, but it is difficult about RUM.
+
+#### Mark points
+
+- Mark current Frame Per Seconds(FPS)
+- Mark each action
+
+Record FPS
 
 ```js
+const { PerformanceMetadataMarker } = require("performance-mark-metadata");
 const marker = new PerformanceMetadataMarker();
-marker.mark("start", {
-    details: {
-        id: 1
-    }
-});
 
-marker.mark("start task", {
-    details: {
-        id: 2
-    }
-});
-
-return Promise.resolve().then(() => {
-    marker.mark("finish task", {
+const FpsEmitter = require("fps-emitter");
+const fps = new FpsEmitter();
+fps.on("update", function(FPS) {
+    // mark current FPS
+    marker.mark("FPS", {
         details: {
-            id: 3
+            FPS: FPS
         }
     });
-}).then(() => {
-    // collect log and metadata.
-    const results = performance
-        .getEntries()
-        .map(entry => {
-            return marker.getEntryMetadata(entry);
-        });
-    assert.deepEqual(results, [
-        {
-            "details": {
-                "id": 1
-            }
-        },
-        {
-            "details": {
-                "id": 2
-            }
-        },
-        {
-            "details": {
-                "id": 3
-            }
-        }
-    ]);
 });
 ```
+
+and record action
+
+```js
+// heavy task
+const heavyTaskButton = document.getElementById("js-button");
+heavyTaskButton.addEventListener("click", () => {
+    marker.mark("Heavy Action");
+
+    // ... heavy task ...
+})
+```
+
+After that, you can get FPS and action logs.
+
+```js
+const logData = performance.getEntriesByType("mark").map(entry => {
+    const meta = marker.getEntryMetadata(entry);
+    return {
+        type: entry.name,
+        timeStamp: entry.startTime,
+        meta: meta
+    };
+});
+```
+
+#### Analytics
+
+You can get the log data and analyze the log data.
+
+For example, visualize the log data by using [C3.js](http://c3js.org/ "C3.js").
+You can found the relationship  between "FPS" and "Heavy Task".
+
+![example.gif](./example/example.gif)
 
 ## Changelog
 

@@ -3,18 +3,60 @@
 const { PerformanceMetadataMarker } = require("performance-mark-metadata");
 const marker = new PerformanceMetadataMarker();
 const outputTextField = document.getElementById("js-output");
-// main content
+// main loop
+(() => {
+    const canvasContext = document.getElementById("js-canvas").getContext("2d");
 
-const canvasContext = document.getElementById("js-canvas").getContext("2d");
+    function render() {
+        canvasContext.clearRect(0, 0, 240, 240);
+        canvasContext.font = "24px serif";
+        canvasContext.fillText(new Date().toISOString(), 0, 100);
+        requestAnimationFrame(render);
+    }
 
-function render() {
-    canvasContext.clearRect(0, 0, 320, 320);
-    canvasContext.font = "24px serif";
-    canvasContext.fillText(new Date().toISOString(), 0, 100);
-    requestAnimationFrame(render);
-}
-
-render();
+    render();
+})();
+// chart
+const c3 = require("c3");
+const chart = c3.generate({
+    bindto: "#js-chart",
+    data: {
+        x: "timeStamp",
+        rows: [],
+        types: {
+            FPS: "line"
+        }
+    },
+    line: {
+        connectNull: true
+    },
+    subchart: {
+        show: true
+    },
+    zoom: {
+        enabled: true
+    }
+});
+// FPS: 0 -60
+chart.axis.min(0);
+chart.axis.max(60);
+const updateChart = logData => {
+    chart.load({
+        rows: [["timeStamp", "FPS", "Action"]].concat(
+            logData.map(log => {
+                return [Math.round(log.timeStamp), log.type === "FPS" ? log.meta.details.FPS : null];
+            })
+        )
+    });
+    chart.xgrids(
+        logData.filter(log => log.type !== "FPS").map(log => {
+            return {
+                value: Math.round(log.timeStamp),
+                text: log.type
+            };
+        })
+    );
+};
 // fps
 const FpsEmitter = require("fps-emitter");
 const fps = new FpsEmitter();
@@ -26,18 +68,18 @@ fps.on("update", function(FPS) {
         }
     });
 
-    const pageLoad = performance.timing.navigationStart;
-    const output = performance.getEntriesByType("mark").map(entry => {
+    const logData = performance.getEntriesByType("mark").map(entry => {
         const meta = marker.getEntryMetadata(entry);
         return {
             type: entry.name,
-            timeStamp: pageLoad + entry.startTime,
+            timeStamp: entry.startTime,
             meta: meta
         };
     });
-    outputTextField.textContent = JSON.stringify(output, null, 4);
+    updateChart(logData);
+    outputTextField.textContent = JSON.stringify(logData, null, 4);
 });
-// defined heavy task
+// heavy task
 const heavyTaskButton = document.getElementById("js-button");
 heavyTaskButton.addEventListener("click", () => {
     marker.mark("Heavy Action");
