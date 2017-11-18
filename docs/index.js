@@ -17,45 +17,35 @@ const outputTextField = document.getElementById("js-output");
     render();
 })();
 // chart
-const c3 = require("c3");
-const chart = c3.generate({
-    bindto: "#js-chart",
-    data: {
-        x: "timeStamp",
-        rows: [],
-        types: {
-            FPS: "line"
-        }
-    },
-    line: {
-        connectNull: true
-    },
-    subchart: {
-        show: true
-    },
-    zoom: {
-        enabled: true
-    }
-});
-// FPS: 0 -60
-chart.axis.min(0);
-chart.axis.max(60);
+// in custom-plotly.js
+const Plotly = require("plotly.js");
 const updateChart = logData => {
-    chart.load({
-        rows: [["timeStamp", "FPS", "Action"]].concat(
-            logData.map(log => {
-                return [Math.round(log.timeStamp), log.type === "FPS" ? log.meta.details.FPS : null];
-            })
-        )
-    });
-    chart.xgrids(
-        logData.filter(log => log.type !== "FPS").map(log => {
-            return {
-                value: Math.round(log.timeStamp),
-                text: log.type
-            };
-        })
-    );
+    const FPSLog = logData.filter(log => log.type === "FPS");
+    const OtherLog = logData.filter(log => log.type !== "FPS");
+    const trace1 = {
+        x: FPSLog.map(log => Math.round(log.timeStamp)),
+        y: FPSLog.map(log => log.meta.details.FPS),
+        type: "scatter",
+        name: "FPS"
+    };
+    const events = {
+        x: OtherLog.map(log => Math.round(log.timeStamp)),
+        y: 50,
+        text: OtherLog.map(log => `${log.type}<br>${JSON.stringify(log)}`),
+        mode: "markers",
+        type: "scatter",
+        marker: { size: 12 },
+        name: "Event"
+    };
+
+    const layout = {
+        title: "FPS and Action",
+        yaxis: {
+            range: [0, 60]
+        }
+    };
+    const data = [trace1, events];
+    Plotly.newPlot("js-chart", data, layout, { editable: true });
 };
 // fps
 const FpsEmitter = require("fps-emitter");
