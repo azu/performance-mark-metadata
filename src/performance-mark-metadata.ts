@@ -26,7 +26,7 @@ export class PerformanceMetadataMarker {
         if (!metadata) {
             return;
         }
-        const entries = this.performance.getEntriesByName(name);
+        const entries = this.performance.getEntriesByName(name, "mark");
         const currentMark = entries[entries.length - 1];
         if (currentMark) {
             this.metadataMap.set(currentMark, metadata);
